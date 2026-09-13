@@ -1,4 +1,5 @@
 import shap
+import joblib
 import pandas as pd
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.linear_model import LogisticRegression
@@ -83,8 +84,16 @@ def explain_model(model, X_train, X_test):
     plt.close()
 
     print("SHAP plots saved: reports_shap_importance.png, reports_shap_beeswarm.png")
+
+
+def save_model(model, path: str = "app/churn_model.pkl"):
+    joblib.dump(model, path)
+    print(f"Model saved to {path}")
+
 if __name__ == "__main__":
     df = load_data()
     X, y = prepare_features(df)
     fitted_lr, X_train, X_test = train_and_evaluate(X, y)
     explain_model(fitted_lr, X_train, X_test)
+    save_model(fitted_lr)
+
