@@ -1,0 +1,13 @@
+Internet Service Plans - TelcoRetain
+
+DSL: Available in most areas, speeds up to 50 Mbps. Lower cost, more stable 
+in areas with older infrastructure.
+
+Fiber optic: Available in select areas, speeds up to 1 Gbps. Higher cost. 
+Known issue: fiber optic customers have historically reported higher churn 
+rates, often linked to installation delays and higher monthly pricing 
+compared to DSL.
+
+Troubleshooting slow internet: restart your router (unplug for 30 seconds), 
+check for outages in your area via the TelcoRetain status page, ensure no 
+more than 8 devices are connected simultaneously on standard plans.

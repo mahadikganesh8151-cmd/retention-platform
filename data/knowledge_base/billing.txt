@@ -1,0 +1,12 @@
+Billing Policy - TelcoRetain
+
+Customers are billed monthly on the same date they signed up. Payment methods 
+accepted: credit card, bank transfer (automatic), and electronic check. 
+Electronic check payments may take 3-5 business days to process.
+
+Late payments: if a bill is not paid within 10 days of the due date, a late 
+fee of $5 is applied. Service is not suspended until 30 days of non-payment.
+
+Refunds: prorated refunds are issued only for service outages exceeding 24 
+hours, or for billing errors caused by TelcoRetain. Refunds are processed 
+within 7-10 business days to the original payment method.

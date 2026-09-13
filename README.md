@@ -72,11 +72,54 @@ POST /predict
 }
 ```
 
+## RAG support chatbot
 
+A retrieval-augmented chatbot (`app/rag_service.py`) answers customer support
+questions grounded in a company knowledge base, rather than relying on the
+LLM's general training knowledge.
+
+**Pipeline:**
+1. **Knowledge base** — 4 short policy documents (billing, contracts,
+   internet service, cancellation) for a fictional telecom company,
+   TelcoRetain
+2. **Chunking** — documents split into 300-character chunks with 50-character
+   overlap, preserving context across chunk boundaries
+3. **Embedding** — chunks embedded with `all-MiniLM-L6-v2`
+   (sentence-transformers), consistent with the original DreamConnect project
+4. **Indexing** — embeddings stored in a FAISS `IndexFlatL2` index (exact
+   nearest-neighbor search — appropriate at this scale; an approximate index
+   like IVF/HNSW would only be justified at millions of vectors)
+5. **Retrieval** — top-k (k=3) most relevant chunks retrieved per query via
+   L2 distance
+6. **Generation** — Gemini (`gemini-2.5-flash`, via the current `google-genai`
+   SDK) generates an answer, explicitly instructed to use ONLY the retrieved
+   context and to say "I don't know" rather than guess — this groundedness
+   constraint is what makes it RAG rather than an ungrounded chatbot
+
+**Retrieval evaluation (`app/evaluate_retrieval.py`):** a labeled test set of
+8 representative customer questions, each mapped to its known-correct source
+document. Measures **Hit Rate @ k** — whether the correct document appears
+in the top-k retrieved chunks.
+
+- **Result: 100% Hit Rate @ 3 (8/8)**
+- Caveat: this validates the mechanism at small scale (12 chunks, 8 test
+  queries); a production system would need a larger, more adversarial
+  evaluation set, and hit rate would likely drop somewhat as the knowledge
+  base and query diversity grow. The evaluation script is reusable and
+  designed to scale with the knowledge base.
+
+### Example
+**Query:** "Can I cancel my contract early and will I be charged?"
+
+**Retrieved:** 3 chunks from `contracts.txt`
+
+**Answer:** Correctly explained cancellation terms for all three contract
+types (month-to-month, one-year, two-year) with accurate fee amounts, fully
+grounded in the retrieved content — no hallucinated details.
 markdown
 - [x] Data pipeline
 - [x] Churn prediction model
-- [ ] RAG support chatbot
+- [x] RAG support chatbot
 - [ ] Retention agent
 - [ ] Deployment
 ## Tech stack
