@@ -16,13 +16,6 @@ if not os.path.exists(MODEL_PATH):
 model = joblib.load(MODEL_PATH)
 
 
-@app.get("/")
-def root():
-    return {
-        "message": "Retention Platform API is running",
-        "docs": "/docs",
-        "health": "/health"
-    }
 class CustomerInput(BaseModel):
     gender: str
     SeniorCitizen: int
@@ -44,12 +37,23 @@ class CustomerInput(BaseModel):
     MonthlyCharges: float
     TotalCharges: float
 
+@app.get("/")
+def root():
+    return {
+        "message": "Retention Platform API is running",
+        "docs": "/docs",
+        "health": "/health"
+    }
 
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
 @app.post("/predict")
 def predict(customer: CustomerInput):
     try:
-        input_df = pd.DataFrame([customer.dict()])
+        input_df = pd.DataFrame([customer.model_dump()])
         input_df = pd.get_dummies(input_df)
 
         model_columns = model.named_steps["scaler"].feature_names_in_
