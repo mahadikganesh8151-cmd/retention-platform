@@ -1,0 +1,15 @@
+Contract Types - TelcoRetain
+
+Month-to-month: No long-term commitment. Can be cancelled anytime with no 
+penalty, effective at the end of the current billing cycle.
+
+One-year contract: Discounted monthly rate compared to month-to-month. 
+Early cancellation before the 12-month term incurs a $150 early termination fee.
+
+Two-year contract: Lowest available monthly rate. Early cancellation before 
+the 24-month term incurs a $250 early termination fee, prorated down after 
+month 12.
+
+Customers can switch from month-to-month to a one or two-year contract at 
+any time to access lower rates, but cannot switch from a longer contract to 
+month-to-month before the term ends without paying the early termination fee.
