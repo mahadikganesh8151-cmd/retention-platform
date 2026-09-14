@@ -139,6 +139,9 @@ Run with:
 ```
 pytest tests/test_chat_api.py -v
 ```
+### System Integration
+
+/chat accepts an optional customer_id, looks up churn risk via the Phase 1/2 model, and if risk >= 0.5 threshold, adjusts the LLM's tone and sets an escalated flag. Include both real test results: customer 7590-VHVEG (80.5% risk, escalated: true) and customer 3655-SNQYZ (1.7% risk, escalated: false).
 markdown
 - [x] Data pipeline
 - [x] Churn prediction model
