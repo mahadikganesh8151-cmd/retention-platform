@@ -101,7 +101,7 @@ LLM's general training knowledge.
 document. Measures **Hit Rate @ k** — whether the correct document appears
 in the top-k retrieved chunks.
 
-- **Result: 100% Hit Rate @ 3 (8/8)**
+**Result: 100% Hit Rate @ 3 (8/8)**
 - Caveat: this validates the mechanism at small scale (12 chunks, 8 test
   queries); a production system would need a larger, more adversarial
   evaluation set, and hit rate would likely drop somewhat as the knowledge
@@ -116,6 +116,29 @@ in the top-k retrieved chunks.
 **Answer:** Correctly explained cancellation terms for all three contract
 types (month-to-month, one-year, two-year) with accurate fee amounts, fully
 grounded in the retrieved content — no hallucinated details.
+### Chat API
+
+Served via a FastAPI `/chat` endpoint (`app/chat_api.py`, port 8001):
+
+- **`GET /health`** — health check
+- **`POST /chat`** — accepts a customer message, returns a grounded answer
+  plus the source documents used
+
+Embedding model and FAISS index loaded once at startup, same pattern as the
+churn API. Response includes `sources` so the answer is auditable — you can
+verify exactly which documents it was grounded in.
+
+**Test coverage:** 5 pytest tests, including a groundedness check that
+confirms the chatbot declines to answer out-of-scope questions (e.g. "What
+is the capital of France?") rather than hallucinating an answer. Note: these
+tests make live Gemini API calls, so they run noticeably slower (~70s) than
+the fully offline churn model tests — a real trade-off between fast unit
+tests and thorough end-to-end tests worth managing in a larger system.
+
+Run with:
+```
+pytest tests/test_chat_api.py -v
+```
 markdown
 - [x] Data pipeline
 - [x] Churn prediction model
@@ -124,5 +147,8 @@ markdown
 - [ ] Deployment
 ## Tech stack
 
-Python · pandas · Faker · scikit-learn · SHAP · matplotlib · FastAPI (planned) ·
-LangChain (planned) · FAISS (planned) · PostgreSQL (planned)
+## Tech stack
+
+Python ,pandas , Faker , scikit-learn , SHAP , matplotlib , FastAPI ,
+sentence-transformers , FAISS , google-genai (Gemini API) , pytest ,
+LangChain (planned) , PostgreSQL (planned)
