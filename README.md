@@ -2,7 +2,7 @@
 
 An end-to-end system that predicts customer churn, resolves support queries through 
 a retrieval-augmented chatbot, and uses an autonomous agent to reason over both 
-signals and recommend retention actions — with full observability into every decision.
+signals and recommend retention actions  with full observability into every decision.
 
 ## Architecture
 
@@ -16,7 +16,7 @@ Data pipeline → Churn model + RAG chatbot → Retention agent → Action (emai
 
 A custom Python scheduler (`pipeline/flow.py`) runs two ordered steps daily:
 generate synthetic customer data → engineer features (tenure buckets, average
-monthly spend, support-usage flags). Includes logging and failure handling —
+monthly spend, support-usage flags). Includes logging and failure handling 
 if a step fails, downstream steps don't run. Built to be portable to
 Airflow/Prefect for production-scale orchestration.
 
