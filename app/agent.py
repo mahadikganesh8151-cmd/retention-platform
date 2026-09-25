@@ -102,8 +102,6 @@ Decide the single most appropriate action."""
         "reason": reason,
         "execution_result": result
     }
-
-
 if __name__ == "__main__":
     test_churn_risk = {"risk_level": "high", "churn_probability": 0.65}
     test_message = "Hi, just confirming my new billing address was updated correctly."
