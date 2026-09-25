@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from sentence_transformers import SentenceTransformer
 import os
 from app.customer_store import get_churn_risk
+from app.agent import decide_action
 from app.rag_service import load_index_and_chunks, retrieve, generate_answer
 
 app = FastAPI(title="Retention Platform - Chat API")
@@ -28,7 +29,7 @@ class ChatResponse(BaseModel):
     sources: list[str]
     churn_risk: Optional[dict] = None
     escalated: bool = False
-
+    agent_decision: Optional[dict] = None
 @app.get("/health")
 def health():
     return {"status": "ok"}
@@ -40,10 +41,14 @@ def chat(request: ChatRequest):
         churn_info = None
         escalated = False
 
+        agent_decision = None
+
         if request.customer_id:
             churn_info = get_churn_risk(request.customer_id)
-            if churn_info and churn_info["risk_level"] == "high":
-                escalated = True
+            if churn_info:
+                agent_decision = decide_action(request.customer_id, churn_info, request.message)
+                if agent_decision["decision"] in ["escalate_human", "offer_discount", "send_email"]:
+                    escalated = True
 
         retrieved = retrieve(request.message, faiss_index, chunks, embedding_model, k=3)
 
@@ -68,7 +73,9 @@ def chat(request: ChatRequest):
             answer=answer,
             sources=sources,
             churn_risk=churn_info,
-            escalated=escalated
+            escalated=escalated,
+            agent_decision=agent_decision
+
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Chat failed: {str(e)}")
