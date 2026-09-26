@@ -60,7 +60,6 @@ load_dotenv()
 
 from google import genai
 
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 def load_index_and_chunks():
     index = faiss.read_index("app/faiss_index.bin")
@@ -85,7 +84,9 @@ def retrieve(query: str, index, chunks: list[dict], model: SentenceTransformer, 
 
 
 def generate_answer(query: str, retrieved_chunks: list[dict]) -> str:
+    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
     context = "\n\n".join([f"[{c['source']}]: {c['text']}" for c in retrieved_chunks])
+    
 
     prompt = f"""You are a helpful customer support assistant for TelcoRetain.
 Answer the customer's question using ONLY the context below. If the context
