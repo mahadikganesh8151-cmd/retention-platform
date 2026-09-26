@@ -3,7 +3,8 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY app/ ./app/
-COPY data/knowledge_base/ ./data/knowledge_base/
+COPY data/ ./data/
+RUN python app/train_model.py
 RUN python -m app.build_index
 EXPOSE 8000
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

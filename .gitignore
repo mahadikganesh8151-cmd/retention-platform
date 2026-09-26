@@ -4,3 +4,5 @@ __pycache__/
 .venv/
 app/faiss_index.bin
 app/chunks_metadata.json
+data/raw_customers.csv
+data/transformed_customers.csv
